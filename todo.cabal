@@ -1,0 +1,62 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 8a2946c6ecd2a5906f310c6e462e6a6e7bcd051d06094905a9f2c575f6c5f16c
+
+name:           todo
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/thulsadum/todo#readme>
+homepage:       https://github.com/thulsadum/todo#readme
+bug-reports:    https://github.com/thulsadum/todo/issues
+author:         Sebastian Claus
+maintainer:     sbstncls@gmail.com
+copyright:      Apache 2.0
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/thulsadum/todo
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_todo
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable todo-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_todo
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , todo
+  default-language: Haskell2010
+
+test-suite todo-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_todo
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , todo
+  default-language: Haskell2010
