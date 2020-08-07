@@ -1,0 +1,10 @@
+cradle:
+  stack:
+    - path: "./app/"
+      component: "todo:exe:todo-exe"
+    - path: "./src/"
+      component: "todo:lib"
+    - path: "./test/"
+      component: "todo:test:todo-test"
+    - path: "./Setup.hs"
+      component: "Cabal"
