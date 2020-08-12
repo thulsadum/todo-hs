@@ -27,7 +27,7 @@ data Todo = Todo
     getCreationDate :: Maybe Day,
     getDescription :: String
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance Read Todo where
   readsPrec _ s = fixParsedTodo <$> result

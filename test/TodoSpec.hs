@@ -58,5 +58,7 @@ spec = do
               getPriority sut `shouldBe` Just "A"
 
   describe "Serialize according to todotxt.org" $ do
-    it "simple reverseibility todo == (read.show) todo " $ do
-      pendingWith "implement test"
+    it "simple reverseibility todo == (read.show) todo " $
+      let expected = read "Review Tim's pull request" :: Todo
+       in do
+            (read . show) expected `shouldBe` expected
