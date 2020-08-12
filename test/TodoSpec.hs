@@ -56,3 +56,7 @@ spec = do
               getCreationDate sut `shouldBe` expectedCreationDate
               getDescription sut `shouldBe` "Review Tim's pull request"
               getPriority sut `shouldBe` Just "A"
+
+  describe "Serialize according to todotxt.org" $ do
+    it "simple reverseibility todo == (read.show) todo " $ do
+      pendingWith "implement test"
