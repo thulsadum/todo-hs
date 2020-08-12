@@ -35,6 +35,16 @@ spec = do
               getCreationDate sut `shouldBe` expectedCreationDate
               getDescription sut `shouldBe` "Review Tim's pull request"
               getPriority sut `shouldBe` Nothing
+      it "has a creation date set and is done" $
+        let sut = read "x 2011-03-01  Review Tim's pull request"
+            expectedCreationDate = Just $ fromGregorian 2011 03 01
+         in do
+              sut `shouldSatisfy` isDone
+              getCompletionDate sut `shouldBe` Nothing
+              getCreationDate sut `shouldBe` expectedCreationDate
+              getDescription sut `shouldBe` "Review Tim's pull request"
+              getPriority sut `shouldBe` Nothing
+
     context "when all fields are set but NO tags" $ do
       it "parses succesfully" $
         let sut = read "x (A) 2011-03-02 2011-03-01 Review Tim's pull request" :: Todo
