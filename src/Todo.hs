@@ -30,13 +30,24 @@ data Todo = Todo
   deriving (Show)
 
 instance Read Todo where
-  readsPrec _ s = result
+  readsPrec _ s = fixParsedTodo <$> result
     where
       result =
         case readP_to_S parseTodo s of
           [] -> []
           [x] -> [x]
           x : _ -> [x] -- NOTE / FIXME this seems to be quite a crude fix to the ambiguous parsing
+
+-- FIXME would be better to fix grammar, i guess
+fixParsedTodo :: (Todo, String) -> (Todo, String)
+fixParsedTodo
+  ( todo@Todo
+      { getCompletionDate = Just date,
+        getCreationDate = Nothing
+      },
+    s
+    ) = (todo {getCompletionDate = Nothing, getCreationDate = Just date}, s)
+fixParsedTodo x = x
 
 -- instance Show Todo where
 --     show = undefined
