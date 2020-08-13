@@ -14,7 +14,7 @@ where
 import Control.Applicative ((<$>), (<*>))
 import Control.Monad (forM, replicateM)
 import Data.Char (isSpace)
-import Data.Time (Day, fromGregorian)
+import Data.Time (Day, fromGregorian, showGregorian)
 import Text.ParserCombinators.ReadP
 import Text.ParserCombinators.ReadP (count)
 
@@ -27,7 +27,28 @@ data Todo = Todo
     getCreationDate :: Maybe Day,
     getDescription :: String
   }
-  deriving (Show, Eq)
+  deriving (Eq)
+
+instance Show Todo where
+  show = flappend [sIsDone, sPriority, sCompletionDate, sCreationDate, getDescription]
+    where
+      sIsDone Todo {isDone = True} = "x "
+      sIsDone Todo {isDone = False} = ""
+
+      sPriority Todo {getPriority = Just p} = "(" ++ p ++ ")"
+      sPriority Todo {getPriority = Nothing} = ""
+
+      sDate (Just d) = showGregorian d ++ " "
+      sDate Nothing = ""
+
+      sCompletionDate Todo {getCompletionDate = maybeD} = sDate maybeD
+      sCreationDate Todo {getCreationDate = maybeD} = sDate maybeD
+
+flap :: Functor f => f (a -> b) -> a -> f b
+flap trans val = (\f -> f val) <$> trans
+
+flappend :: Monoid b => [a -> b] -> a -> b
+flappend f x = mconcat $ flap f x
 
 instance Read Todo where
   readsPrec _ s = fixParsedTodo <$> result
