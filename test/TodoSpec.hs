@@ -2,6 +2,7 @@ module TodoSpec (spec) where
 
 import Data.Time (fromGregorian)
 import Test.Hspec
+import Test.QuickCheck (Testable (property))
 import Todo
 
 spec = do
@@ -44,6 +45,19 @@ spec = do
               getCreationDate sut `shouldBe` expectedCreationDate
               getDescription sut `shouldBe` "Review Tim's pull request"
               getPriority sut `shouldBe` Nothing
+      it "has dates and description" $
+        let sut = read "2020-05-08 2018-01-18 foo"
+         in do
+              getCompletionDate sut `shouldBe` Just (fromGregorian 2020 05 08)
+              getCreationDate sut `shouldBe` Just (fromGregorian 2018 01 18)
+              getDescription sut `shouldBe` "foo"
+      it "is done, has dates and description" $
+        let sut = read "x 2020-05-08 2018-01-18 foo"
+         in do
+              sut `shouldSatisfy` isDone
+              getCompletionDate sut `shouldBe` Just (fromGregorian 2020 05 08)
+              getCreationDate sut `shouldBe` Just (fromGregorian 2018 01 18)
+              getDescription sut `shouldBe` "foo"
 
     context "when all fields are set but NO tags" $ do
       it "parses succesfully" $
@@ -62,3 +76,6 @@ spec = do
       let expected = read "Review Tim's pull request" :: Todo
        in do
             (read . show) expected `shouldBe` expected
+    it "read is inverse to show" $
+      property $
+        \todo -> (read . show) todo == (todo :: Todo)

@@ -15,6 +15,7 @@ import Control.Applicative ((<$>), (<*>))
 import Control.Monad (forM, replicateM)
 import Data.Char (isSpace)
 import Data.Time (Day, fromGregorian, showGregorian)
+import Test.QuickCheck (Arbitrary (arbitrary), Gen, choose)
 import Text.ParserCombinators.ReadP
 import Text.ParserCombinators.ReadP (count)
 
@@ -29,12 +30,29 @@ data Todo = Todo
   }
   deriving (Eq)
 
+instance Arbitrary Todo where
+  arbitrary =
+    Todo <$> arbitrary
+      <*> arbitrary -- FIXME do not generate Todos with completion
+      <*> arbitrary --  but w/o creation date
+      <*> arbitrary
+      <*> notEmpty
+    where
+      notEmpty = fmap ("a" ++) arbitrary
+
+instance Arbitrary Day where
+  arbitrary =
+    fromGregorian <$> choose (2000, 2020)
+      <*> choose (1, 12)
+      <*> choose (1, 28)
+
 instance Show Todo where
   show = flappend [sIsDone, sPriority, sCompletionDate, sCreationDate, getDescription]
     where
       sIsDone Todo {isDone = True} = "x "
       sIsDone Todo {isDone = False} = ""
 
+      sPriority Todo {getPriority = Just ""} = ""
       sPriority Todo {getPriority = Just p} = "(" ++ p ++ ")"
       sPriority Todo {getPriority = Nothing} = ""
 
